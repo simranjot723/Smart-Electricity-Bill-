@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-6">
+  <title>Smart Electricity Billing - Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+        background-image: url('/static/bg-login.jpg');
+        background-size: cover;
+        background-position: center;
+          background: linear-gradient(135deg, #081a3a, #5988da);
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          color: #070000;
+    }
+      .navbar {
+            background: linear-gradient(90deg, #295dcf, #dd2476);
+      }
+      .navbar-brand {
+            font-weight: bold;
+            font-size: 2.0rem;
+            color: #fdfbf6 !important;
+      }
+    .card { background: rgba(234, 235, 237, 0.95); border-radius: 15px; padding: 25px; margin-top: 80px; }
+    .btn:hover { opacity:0.9; transform:scale(1.02); transition:0.3s; }
+    footer { margin-top:40px; text-align:center; color:rgb(243, 241, 241); }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-primary">
+  <div class="container-fluid">
+    <span class="navbar-brand h1">⚡ Smart Electricity Billing</span>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="card shadow-lg col-md-6 mx-auto">
+    <h3 class="text-center text-uppercase text-bold ">🔐Login</h3>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} text-center">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form action="/login" method="POST">
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-123"></i></span>
+        <input class="form-control" type="text" name="meter_number" placeholder=" Meter Number" required>
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-geo-alt"></i ></span>    
+        <input class="form-control" type="text" name="location" placeholder="Location" required>
+        </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-person"></i></span>
+        <input class="form-control" type="text" name="username" placeholder="Username" required>
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+        <input class="form-control" type="password" name="password" placeholder="Password" required>
+      </div>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="showPassword" onclick="togglePassword()">
+        <label class="form-check-label" for="showPassword">Show Password</label>
+      </div>
+      <script>
+        function togglePassword() {
+          var passwordField = document.querySelector('input[name="password"]');
+          if (passwordField.type === "password") {
+            passwordField.type = "text";
+          } else {
+            passwordField.type = "password";
+          }
+        }
+      </script>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="remember_me" id="rememberMe">
+        <label class="form-check-label" for="rememberMe">Remember Me</label>
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-envelope"></i ></span>    
+        <input class="form-control" type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-telephone"></i ></span>    
+        <input class="form-control" type="tel" name="mobile" placeholder="Mobile
+    Number" pattern="[0-9]{10}" required>
+        </div>
+      <button class="btn btn-primary w-100 mb-2"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+      <a href="/reset_by_mobile" class="text-muted d-block text-center">Forgot Password? Reset via Mobile</a>
+    </form>
+    <hr>
+    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#registerModal"><i class="bi bi-person-plus"></i> Register</button>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content p-4">
+      <h5 class="text-center text-success">Create Account</h5>
+      <form action="/register" method="POST">
+        <input class="form-control mb-2" type="text" name="meter_number" placeholder="🔢 Meter Number" required>
+        <input class="form-control mb-2" type="text" name="location" placeholder="📍 Location" required>
+        <input class="form-control mb-2" type="text" name="username" placeholder="👤 New Username" required>
+        <div id="liveAlerts"></div>
+        <input class="form-control mb-2" type="password" id="password" name="password" placeholder="🔒 New Password" required>
+        <div class="progress mb-2" id="strengthBar"><div class="progress-bar"></div></div>
+        <small id="strengthText" class="text-muted"></small>
+        <!-- Confirm password -->
+        <input class="form-control mb-2" type="password" id="confirm_password" placeholder="✅ Confirm Password" required>
+        <small id="matchText" class="text-muted"></small>
+
+        <input class="form-control mb-2" type="email" name="email" placeholder="📧 New Email" required>
+        <input class="form-control mb-2" type="tel" name="mobile" placeholder="☎️ Mobile Number" pattern="[0-9]{10}" required>
+        <button class="btn btn-success w-100">✅ Register</button>
+      </form>
+    </div>
+  </div>
+</div>  
+<script>
+  const password = document.getElementById("password");
+  const strengthBar = document.getElementById("strengthBar").firstElementChild;
+  const strengthText = document.getElementById("strengthText");
+  const confirmPassword = document.getElementById("confirm_password");
+  const matchText = document.getElementById("matchText");
+  const liveAlerts = document.getElementById("liveAlerts");
+
+  function showAlert(message, type="danger") {
+    liveAlerts.innerHTML = `<div class="alert alert-${type} text-center py-1 my-1">${message}</div>`;
+  }
+
+  password.addEventListener("input", () => {
+    let val = password.value;
+    let strength = 0;
+
+    if (val.length >= 8) strength++;
+    if (/[A-Z]/.test(val)) strength++;
+    if (/[0-9]/.test(val)) strength++;
+    if (/[!@#$%^&*]/.test(val)) strength++;
+
+    switch (strength) {
+      case 0:
+      case 1:
+        strengthBar.style.width = "25%";
+        strengthBar.style.background = "red";
+        strengthText.textContent = "⚠️ Weak";
+        showAlert("❌ Password too weak. Add uppercase, number, and special character.");
+        break;
+      case 2:
+        strengthBar.style.width = "50%";
+        strengthBar.style.background = "orange";
+        strengthText.textContent = "🟠 Medium";
+        showAlert("⚠️ Medium strength. Add more variety or Special Characters for security.", "warning");
+        break;
+      case 3:
+        strengthBar.style.width = "75%";
+        strengthBar.style.background = "blue";
+        strengthText.textContent = "🔵 Strong";
+        showAlert("✅ Strong password.", "success");
+        break;
+      case 4:
+        strengthBar.style.width = "100%";
+        strengthBar.style.background = "green";
+        strengthText.textContent = "💪 Very Strong";
+        showAlert("✅ Excellent password strength!", "success");
+        break;
+    }
+  });
+
+  confirmPassword.addEventListener("input", () => {
+    if (confirmPassword.value === password.value) {
+      matchText.textContent = "✅ Passwords match";
+      matchText.style.color = "green";
+      showAlert("✅ Passwords match!", "success");
+    } else {
+      matchText.textContent = "❌ Passwords do not match";
+      matchText.style.color = "red";
+      showAlert("❌ Passwords do not match.", "danger");
+    }
+  });
+</script>
+<footer><p>© 2026 Smart Billing | Developed by Simranjot, Muskanpeet, Gurpreet</p></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

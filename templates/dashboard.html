@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Electricity Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #041e4a, #588adf);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #b90101;
+    }
+    .navbar {
+      background: linear-gradient(90deg, #295dcf, #dd2476);
+    }
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 2.0rem;
+      color: #fdfbf6 !important;
+    }
+    .card {
+      background: #97368a;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgb(19, 221, 63);
+      transition: transform 0.2s ease-in-out;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    h4 {
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    .form-label {
+      font-weight: 500;
+      color: #f5f1f1;
+    }
+    .form-control {
+      border-radius: 10px;
+      border: 1px solid #0b0101;
+      transition: 0.3s;
+    }
+    .form-control:focus {
+      border-color: #647fad;
+      box-shadow: 0 0 8px rgba(160, 194, 253, 0.3);
+    }
+    .btn-custom {
+      border-radius: 30px;
+      font-weight: 600;
+      padding: 10px 25px;
+      background: linear-gradient(90deg, #f66b50, #dd2476);
+      border: none;
+      color: #fff;
+      transition: 0.3s;
+    }
+    .btn-custom:hover {
+      background: linear-gradient(90deg, #dd2476, #ff512f);
+      transform: scale(1.05);
+    }
+    footer {
+      background: linear-gradient(90deg, #da5b29, #dd2476);
+      color: #fff;
+      padding: 15px;
+      font-size: 0.9rem;
+      border-top: 2px solid #ff512f;
+      text-align: center;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-dark">
+  <div class="container-fluid">
+    <span class="navbar-brand h1">⚡Smart Electricity Billing</span>
+    <a href="/logout" class="btn btn-outline-light btn-sm"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h3 class="text-center mb-4" style="color: #f8f9fa; font-size: 2.0rem; font-weight: bold;">
+    Welcome {{username}}!!
+  </h3>
+</div>
+
+<div class="container mt-4">
+  <h4 class="text-center mb-4" style="color: #f8f9fa; font-size: 2.5rem; font-weight: bold;">
+    ⚡Electricity Dashboard
+  </h4>
+</div>
+
+<div class="container mt-4">
+  <form action="/generate_bill" method="POST">
+    <div class="card shadow">
+      <h4><i class="bi bi-person-circle"></i> Customer Details</h4>
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label">Meter Number</label>
+          <input type="text" class="form-control" name="meter_number" value="{{ meter_number }}" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" name="username" value="{{username}}" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label">Location</label>
+          <input type="text" class="form-control" name="location" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Mobile Number</label>
+          <input type="tel" class="form-control" name="mobile" pattern="[0-9]{10}" required>
+        </div>
+      </div>
+    </div>
+    <div class="card shadow">
+      <h4><i class="bi bi-lightning-charge"></i> Electricity Units</h4>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Previous Month Units</label>
+          <input type="number" class="form-control" name="previous_units" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Current Month Units</label>
+          <input type="number" class="form-control" name="current_units" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow">
+      <h4><i class="bi bi-plug"></i> Appliances Used</h4>
+      <div class="row">
+        {% for appliance in ["AC","Fan","Heater","Laptop","Air Cooler","Toaster","Fridge","TV","Iron","Microwave","Washing Machine","Water Pump","Geyser","Induction","WiFi Router"] %}
+        <div class="col-md-3 mb-3">
+          <label class="form-label">{{ appliance }}</label>
+          <input type="number" class="form-control" name="appliances[{{ appliance }}]" min="0" placeholder="Enter count">
+        </div>
+        {% endfor %}
+      </div>
+      <div class="mt-4 text-center">
+        <button type="submit" class="btn btn-custom btn-lg">
+          <i class="bi bi-calculator"></i> Generate Smart Bill
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<footer class="mt-4">
+  © 2026 Smart Electricity Billing | Developed by Simranjot
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
